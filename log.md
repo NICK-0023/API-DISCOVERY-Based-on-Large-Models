@@ -11,11 +11,11 @@
 操作文档 https://www.llama.com/docs/llama-everywhere/running-meta-llama-on-windows/  
 主要步骤：
 01：注册Hugging Face，并申请模型访问权限，生成个人登录token
-02：在控制台安装Hugging Face-Hub并登录，开始下载Llama模型  
+02：在控制台安装Hugging Face-Hub并登录，开始下载Llama模型 （进行中 6%）
 >huggingface-cli login  #登录  
 
 >huggingface-cli download meta-llama/Meta-Llama-3-8B-Instruct --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B-Instruct #下载
 
-03：安装 transformer torch accelerate  
+03：安装 transformer（4.48.3）  accelerate  torch（进行中）
 04：运行脚本 LLM_Llama.py  
 
