@@ -10,7 +10,7 @@
 1.开始安装Meta Llama模型
 操作文档 https://www.llama.com/docs/llama-everywhere/running-meta-llama-on-windows/  
 2.主要步骤：     
-01：注册Hugging Face，并申请模型访问权限，生成个人登录token
+01：注册Hugging Face，并申请模型访问权限，生成个人登录token  
 02：在控制台安装Hugging Face-Hub并登录，开始下载Llama模型 （进行中 6%）
 控制台命令如下：  
 >huggingface-cli login  #登录  
@@ -24,7 +24,7 @@
 1.成功安装Meta Llama 3-8b 与 torch  
 **2025/2/10**  
 1.对Spark进行微调，并且完善输出格式  
-2.利用GPT-4对50条RapidAPI进行推荐测试
+2.利用GPT-4对50条RapidAPI进行推荐测试  
 3.本地运行llama-3-8b时，内存以及显存不足，后续考虑更换轻量级模型 llama-2 
 
 
