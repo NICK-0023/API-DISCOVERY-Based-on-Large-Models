@@ -16,7 +16,7 @@
 >huggingface-cli login  #登录  
 > tokens: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
 
->huggingface-cli download meta-llama/Meta-Llama-3-8B-Instruct --include "original/*" --local-dir meta-llama/Meta-Llama-3-8B-Instruct #下载  
+>huggingface-cli download meta-llama/Llama-2-7b --local-dir meta-llama/Llama-2-7b #下载  
 
 03：安装 transformer（4.48.3）  accelerate  torch（进行中）  
 04：运行脚本 LLM_Llama.py  
