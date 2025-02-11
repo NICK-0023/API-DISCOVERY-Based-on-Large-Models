@@ -1,23 +1,34 @@
-import transformers
+from transformers import LlamaTokenizer, LlamaForCausalLM
 import torch
-from transformers import AutoTokenizer
 
-model = "meta-llama/Meta-Llama-3-8B-Instruct"
-tokenizer = AutoTokenizer.from_pretrained(model)
-pipeline = transformers.pipeline(
-    "text-generation",
-    model=model,
-    torch_dtype=torch.float16,
-)
-sequences = pipeline(
-    'I have tomatoes, basil and cheese at home. What can I cook for dinner?\n',
-    do_sample=True,
-    top_k=10,
-    num_return_sequences=1,
-    eos_token_id=tokenizer.eos_token_id,
-    truncation = True,
-    max_length=400,
-)
+# 加载模型和tokenizer
+model_name = "meta-llama/Llama-2-7b-hf"  # 你可以根据需要调整路径
+tokenizer = LlamaTokenizer.from_pretrained(model_name)
+model = LlamaForCausalLM.from_pretrained(model_name)
+torch.device('cpu')
 
-for seq in sequences:
-    print(f"Result: {seq['generated_text']}")
+# 对话函数
+def chat_with_llama(input_text):
+    # 编码输入
+    inputs = tokenizer(input_text, return_tensors="pt")
+
+    # 生成模型输出
+    with torch.no_grad():
+        outputs = model.generate(inputs["input_ids"], max_length=200, num_beams=5, top_p=0.9, temperature=0.7)
+
+    # 解码输出
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+    return response
+
+
+# 主程序
+if __name__ == "__main__":
+    print("与 Llama 2 7B 模型对话吧！输入 'exit' 退出。")
+    while True:
+        user_input = input("你: ")
+        if user_input.lower() == 'exit':
+            print("退出对话。")
+            break
+        response = chat_with_llama(user_input)
+        print(f"Llama 2: {response}")
