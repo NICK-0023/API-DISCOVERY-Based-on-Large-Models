@@ -32,4 +32,8 @@
 1.成功安装ollama  
 2.成功安装llama3.2:1b 和 deepseek-r1:7b  
 3.构建了实际使用场景数据  
+**2015/2/14**
+1.成功安装bert
+2.正在安装llama模型
+3.准备安装openai提供的api调用
 
