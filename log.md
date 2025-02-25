@@ -45,4 +45,10 @@
 1.完成实现传统方法的小规模网络算法  
 2.正在安装llama3.2.1b和deepseek-r1···  
 3.成功安装llama2.7b  
+**2025/2/25**  
+1.ollama运行大模型的命令  
+展示本地模型列表  
+`D:\Ollama>ollama list`  
+运行指定模型  
+`D:\Ollama>ollama run deepseek-r1:7b`  
 
