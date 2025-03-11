@@ -51,4 +51,6 @@
 `D:\Ollama>ollama list`  
 运行指定模型  
 `D:\Ollama>ollama run deepseek-r1:7b`  
+**2025\3\11** 
+1.正在完善应用场景，预计构建50个应用场景，并人工完成正确映射数据集，进行结果比对。
 
