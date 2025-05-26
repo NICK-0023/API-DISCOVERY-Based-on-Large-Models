@@ -1,6 +1,11 @@
+from sentence_transformers import SentenceTransformer, util
 import pandas as pd
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+
+print("正在加载 Sentence-BERT 模型...")
+model = SentenceTransformer("sentence-transformers/paraphrase-MiniLM-L12-v2")
+print("模型加载完成！")
+
+
 
 file_paths = [
     'D:/Desktop/Papers/实验结果/Endpoint选择/Artificial Intelligence_Machine Learning.xlsx',
@@ -138,48 +143,54 @@ user_queries = [
     "Single image by template",
     "Photo details"
 ]
-reciprocal_ranks=[]
-hit_count = 0
 # 3. 为每个用户查询计算相似度并输出 Top 10 匹配
+reciprocal_ranks = []
+hit_count = 0
+top_n = 20
+
 for i, query in enumerate(user_queries):
     file_index = int(i / 5)
     file_path = file_paths[file_index]
-    print(file_path)
-    # 读取当前 Excel 文件
+    print(f"读取文件：{file_path}")
+
     df = pd.read_excel(file_path)
     api_descriptions = df["Endpoint描述"].dropna().astype(str).tolist()
     api_names = df["Endpoint名称"].dropna().astype(str).tolist()
-    print(f"\n用户查询 {i + 1}: {query} ")
+    print(f"\n用户查询 {i + 1}: {query}")
 
-    documents = api_descriptions + [query]  # 合并API描述 + 当前查询
-    vectorizer = TfidfVectorizer()
-    tfidf_matrix = vectorizer.fit_transform(documents)
+    # 使用 SBERT 生成嵌入
+    embeddings = model.encode(api_descriptions + [query], convert_to_tensor=True)
 
-    cosine_similarities = cosine_similarity(tfidf_matrix[-1], tfidf_matrix[:-1])
-    similarity_scores = cosine_similarities.flatten()
-    sorted_indices = similarity_scores.argsort()[::-1]
+    query_embedding = embeddings[-1]  # 最后一项是查询
+    api_embeddings = embeddings[:-1]  # 前面的是所有 API 描述
 
-    top_n = 20
+    cosine_scores = util.cos_sim(query_embedding, api_embeddings).flatten()
+    sorted_indices = cosine_scores.argsort(descending=True)
+
     top_k_names = [api_names[idx] for idx in sorted_indices[:top_n]]
     correct_api_name = endpoint_names[i]
+
     print(top_k_names)
     print(correct_api_name)
+
     if correct_api_name in top_k_names:
-        rank = top_k_names.index(correct_api_name) + 1  # 1-based rank
+        rank = top_k_names.index(correct_api_name) + 1
         rr = 1 / rank
-        hit_count+=1
+        hit_count += 1
     else:
-        print("不在")
-        rr = 0.0  # 没有出现在Top 5中
+        print("❌ 正确结果不在 Top-k 中")
+        rr = 0.0
+
     reciprocal_ranks.append(rr)
-    for rank, index in enumerate(sorted_indices[:top_n], start=1):
-        print(f"{rank}. 相似度得分：{similarity_scores[index]:.4f}，Endpoint 名称：{api_names[index]}")
+
+    for rank, idx in enumerate(sorted_indices[:top_n], start=1):
+        print(f"{rank}. 相似度：{cosine_scores[idx]:.4f}，Endpoint 名称：{api_names[idx]}")
     print('\n')
+
+# 评估指标
 mrr = sum(reciprocal_ranks) / len(reciprocal_ranks)
 hit_at_k = hit_count / len(user_queries)
-print(f"k值为: {top_n:.4f}")
-print(f"MRR值为: {mrr:.4f}")
-print(f"Hit@{top_n} 值为: {hit_at_k:.4f}")
 
-
-
+print(f"Top-k = {top_n}")
+print(f"MRR: {mrr:.4f}")
+print(f"Hit@{top_n}: {hit_at_k:.4f}")
