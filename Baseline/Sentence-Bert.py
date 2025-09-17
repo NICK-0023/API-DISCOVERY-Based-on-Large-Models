@@ -73,6 +73,7 @@ endpoint_names = [
 
 ]
 user_queries = [
+
     # 1. AI
     "Get list of voices",
     "Add prompt to image queue",
@@ -146,7 +147,7 @@ user_queries = [
 # 3. 为每个用户查询计算相似度并输出 Top 10 匹配
 reciprocal_ranks = []
 hit_count = 0
-top_n = 20
+top_n = 10
 
 for i, query in enumerate(user_queries):
     file_index = int(i / 5)

@@ -159,7 +159,7 @@ for i, query in enumerate(user_queries):
     similarity_scores = cosine_similarities.flatten()
     sorted_indices = similarity_scores.argsort()[::-1]
 
-    top_n = 20
+    top_n = 10
     top_k_names = [api_names[idx] for idx in sorted_indices[:top_n]]
     correct_api_name = endpoint_names[i]
     print(top_k_names)
